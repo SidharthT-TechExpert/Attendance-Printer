@@ -115,6 +115,12 @@ checkboxes.forEach((cb) => {
       checkboxes.forEach((other) => {
         if (other !== this) other.checked = false;
       });
+    }else{
+      displayNames = [];
+      status = {};
+      isRP = {};
+      rawNames = []
+      renderList();
     }
   });
 });
