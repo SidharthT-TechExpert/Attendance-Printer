@@ -1,0 +1,182 @@
+:root {
+  --primary-color: #004d61;
+  /* Dark teal */
+  --secondary-color: #00b7c2;
+  /* Light aqua */
+  --accent-color: #f4f7f9;
+}
+
+body {
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  color: #fff;
+  min-height: 100vh;
+}
+
+header {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 10px 0;
+}
+
+.container-box {
+  background: #ffffff;
+  color: #333;
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+  padding: 20px;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.person {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--accent-color);
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  transition: 0.2s;
+}
+
+.person:hover {
+  background: #e3f7f9;
+  transform: translateY(-2px);
+}
+
+.rp-row {
+  background: #d1f0ff !important;
+  border-left: 5px solid #00aaff;
+}
+
+#output {
+  height: 220px;
+  resize: none;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.btn-custom {
+  background-color: var(--secondary-color);
+  border: none;
+}
+
+.btn-custom:hover {
+  background-color: #0094a3;
+}
+
+input[type="checkbox"] {
+  transform: scale(1.5);
+  /* Increase size */
+  margin-right: 5px;
+  /* Space from label */
+  cursor: pointer;
+}
+
+.form-check-input {
+  width: 2rem;
+  height: 1rem;
+  cursor: pointer;
+}
+
+.copy-btn {
+  background: linear-gradient(90deg, #ff7e5f, #feb47b);
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+  background: linear-gradient(90deg, #feb47b, #ff7e5f);
+  transform: scale(1.05);
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Keep checkbox normal size */
+.custom-tooltip {
+  position: relative;
+  cursor: pointer;
+}
+
+/* Tooltip base - 3x smaller text and padding */
+.custom-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 2px 4px;
+  /* Smaller padding */
+  border-radius: 4px;
+  white-space: nowrap;
+  font-size: 0.6rem;
+  /* Smaller text size */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+  color: #fff;
+}
+
+/* Tooltip arrow - smaller */
+.custom-tooltip::before {
+  content: "";
+  position: absolute;
+  bottom: 115%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 3px;
+  /* Smaller arrow */
+  border-style: solid;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Show tooltip on hover */
+.custom-tooltip:hover::after,
+.custom-tooltip:hover::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-2px);
+}
+
+/* 🟨 Attending alternative CS */
+.custom-tooltip[data-tooltip="Attending alternative CS"]::after {
+  background: linear-gradient(135deg, #ff9800, #ffb74d);
+}
+
+.custom-tooltip[data-tooltip="Attending alternative CS"]::before {
+  border-color: transparent transparent #ff9800 transparent;
+}
+
+/* ❌ Absent */
+.custom-tooltip[data-tooltip="Absent"]::after {
+  background: linear-gradient(135deg, #e53935, #ef5350);
+}
+
+.custom-tooltip[data-tooltip="Absent"]::before {
+  border-color: transparent transparent #e53935 transparent;
+}
