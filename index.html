@@ -362,8 +362,10 @@
           .map((n) => `${count++}. ${n}`)
           .join("\n");
 
+      const link = `\n\n🔗 Link: \n   Tldv:\n   Meet list:\n\n ✍ Report By : `
+
       document.getElementById("output").value =
-        Detalis + Report + presentees + other + absentees + RP;
+        Detalis + Report + presentees + other + absentees + RP + link;
     }
 
     function formatDate(date) {
