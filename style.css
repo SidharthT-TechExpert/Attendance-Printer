@@ -180,3 +180,9 @@ input[type="checkbox"] {
 .custom-tooltip[data-tooltip="Absent"]::before {
   border-color: transparent transparent #e53935 transparent;
 }
+
+
+.alt-cs-text {
+  font-weight: bold;
+  color: #2b01fb; /* matches your 🟨 color */
+}

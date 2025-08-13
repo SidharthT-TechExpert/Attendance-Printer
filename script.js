@@ -137,8 +137,8 @@ function renderList() {
       div.innerHTML = `
       <span class="name">${name}</span>
       <div class="d-flex gap-2">
-          <input type="checkbox" class="custom-tooltip" data-tooltip="Attending alternative CS" onchange="mark('${name}','other',this)"> 🟨
-          <input type="checkbox" class="custom-tooltip" data-tooltip="Absent" onchange="mark('${name}','absent',this)"> ❌
+          <input name='alt' type="checkbox"  class="custom-tooltip" data-tooltip="Attending alternative CS" onchange="mark('${name}','other',this)"> 🟨
+          <input name='Absent' type="checkbox" class="custom-tooltip" data-tooltip="Absent" onchange="mark('${name}','absent',this)"> ❌
      </div>
     `;
       listDiv.appendChild(div);
@@ -148,10 +148,36 @@ function renderList() {
 function mark(name, state, checkbox) {
   const cbs = document.querySelectorAll(`.person input[onchange*="'${name}'"]`);
   cbs.forEach((cb) => {
-    if (cb !== checkbox) cb.checked = false;
+    if (cb !== checkbox) cb.checked = false; // uncheck others
   });
   status[name] = checkbox.checked ? state : "present";
+  updateNameColors();
 }
+
+function updateNameColors() {
+  document.querySelectorAll('.person').forEach((row) => {
+    const altChecked = row.querySelector('input[name="alt"]').checked;
+    const absentChecked = row.querySelector('input[name="Absent"]').checked;
+    const nameSpan = row.querySelector('.name');
+
+    if (nameSpan) {
+      // Reset styles first
+      nameSpan.style.color = '';
+      nameSpan.style.fontWeight = 'bold';
+
+      if (altChecked) {
+        nameSpan.style.color = '#ff9800'; // yellow
+        nameSpan.style.fontWeight = 'bold';
+        nameSpan.style.textShadow = '1px 1px 2px red';
+      } else if (absentChecked) {
+        nameSpan.style.color = 'var(--bs-danger)'; // red
+        nameSpan.style.fontWeight = 'bold';
+        nameSpan.style.textShadow = '1px 1px 2px darkred';
+      }
+    }
+  });
+}
+
 
 function generateOutput() {
   const Mean = "📒 COMMUNICATION SESSION REPORT";
