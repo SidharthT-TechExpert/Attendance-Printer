@@ -71,6 +71,8 @@ document.addEventListener("DOMContentLoaded", function () {
   tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl);
   });
+  const currentDate = document.getElementById("currentDate");
+  currentDate.textContent = formatDate(new Date());
 });
 
 checkboxes.forEach((cb) => {
