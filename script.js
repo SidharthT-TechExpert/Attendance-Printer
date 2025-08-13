@@ -197,13 +197,14 @@ function generateOutput() {
   const Report = "♻ Session Overview:\n";
 
   let count = 1;
-  const presentees =
-    `\n\n🟩 Presentees\n\n` +
+  let presentees =
+    `\n\n🟩 Presentees :\n\n` +
     Object.keys(status)
       .filter((n) => status[n] === "present")
       .sort((a, b) => a.localeCompare(b))
-      .map((n) => `✅ ${n}`)
+      .map((n) => `${count++}. ${n}`)
       .join("\n");
+  presentees = count === 1 ? "" : presentees;
 
   count = 1;
   let other =
