@@ -163,7 +163,8 @@ function updateNameColors() {
       // Reset styles first
       nameSpan.style.color = '';
       nameSpan.style.fontWeight = 'bold';
-
+      nameSpan.style.textShadow = '';
+      
       if (altChecked) {
         nameSpan.style.color = 'var(--bs-warning)'; // yellow
         nameSpan.style.fontWeight = 'bold';
