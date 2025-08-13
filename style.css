@@ -85,6 +85,8 @@ header {
 
 .btn-custom:hover {
   background-color: #0094a3;
+  transform: scale(1.01);
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 input[type="checkbox"] {
@@ -263,18 +265,98 @@ header {
   box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
 }
 
-.close-btn {
-  background: linear-gradient(90deg, #f44336, #e57373);
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+/* Time Selection Container */
+.time-selection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(240, 240, 240, 0.8));
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
-.close-btn:hover {
-  background: linear-gradient(90deg, #e57373, #f44336);
+/* Label Styling */
+.time-selection label {
+  font-weight: 600;
+  color: #222;
+  font-size: 15px;
+  letter-spacing: 0.3px;
+}
+
+/* Dropdown Styling */
+.time-selection select {
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(to right, #ffffff, #f8f9fa);
+  color: #333;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  outline: none;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+}
+
+/* Hover Effect */
+.time-selection select:hover {
+  background: linear-gradient(to right, #e0f7f4, #d9f5f2);
+  transform: scale(1.03);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}
+
+/* Focus Effect */
+.time-selection select:focus {
+  background: linear-gradient(to right, #c3f5ec, #b8f2e8);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
   transform: scale(1.05);
+}
+
+/* Option Styling */
+.time-selection select option {
+  padding: 8px;
+  background: #fff;
+  color: #333;
+}
+
+
+/* link Input Fields */
+.link-input input {
+  flex: 1;
+  padding: 8px 14px;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(to right, #ffffff, #f8f9fa);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  outline: none;
+  transition: all 0.25s ease-in-out;
+}
+
+.link-input input:focus {
+  background: linear-gradient(to right, #c3f5ec, #b8f2e8);
+  transform: scale(1.03);
+}
+
+.time-selection:hover {
+  transform: scale(1.04) !important;
+}
+
+
+/* Smooth transition effect */
+.edit-fullscreen, #outputView {
+  transition: all 0.4s ease;
+}
+
+/* Fade + slide for entering edit mode */
+.slide-in {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.slide-out {
+  transform: translateX(-100%);
+  opacity: 0;
 }

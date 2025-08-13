@@ -179,11 +179,12 @@ function updateNameColors() {
 }
 
 function generateOutput() {
+  const time = document.getElementById("time").value.trim();
   const Mean = "📒 COMMUNICATION SESSION REPORT";
   const Batch = " BCR71";
   const date = formatDate(new Date());
   const GroupName = Group;
-  const Time = " 11:30Am - 12:30Pm";
+  const Time = time;
   const Coordinators =
     Group === "Group 1"
       ? " Arun Narayan Nair & Jagan"
@@ -192,6 +193,13 @@ function generateOutput() {
       : " Arun Narayan Nair & Muhammed Shibili K $ Ajnas Muhammed";
   const Trainer = " Afzal Nazar";
   const Duck = "🔷🔷🔷🔷🔷🔷🔷🔷🔷🔷🔷";
+ const tldv = document.getElementById("tldv").value.trim();
+  const meetList = document.getElementById("meetlist").value.trim();
+  const tldvLink = tldv ? `Tldv: ${tldv}` : "Tldv: Not provided";
+  const meetListLink = meetList ? `Meet list: ${meetList}` : "Meet list: Not provided";
+   const reportBy = document.getElementById("reportBy").value.trim();
+
+  // Prepare the details section
 
   const Detalis = `${Duck}\n${Mean} \n🎓 Batch :${Batch} ${GroupName} \n📅 Date :${date}\n⏰ Time :${Time} \n👨🏻‍🏫 Trainer :${Trainer}\n👫 Coordinators :${Coordinators}\n${Duck}\n\n`;
   const Report = "♻ Session Overview:\n";
@@ -236,7 +244,7 @@ function generateOutput() {
       .join("\n");
   RP = count === 1 ? "" : RP;
 
-  const link = `\n\n🔗 Link: \n   Tldv:\n   Meet list:\n\n ✍ Report By : `;
+  const link = `\n\n🔗 Link: \n\n      ${tldvLink}\n      ${meetListLink}\n\n ✍ Report By : ${reportBy}`;
 
   // FINAL OUTPUT
   const finalText =
@@ -261,6 +269,12 @@ function copyOutput() {
   const editMode = document.getElementById("outputEdit");
   const copyBtn = document.querySelector(".copy-btn");
 
+  if (viewMode.textContent === "" ) 
+    return Swal.fire({
+      icon: "warning",
+      title: "Oops...",
+      text: "Please generate the report first!"
+    });
   // Get text from whichever mode is visible
   const textToCopy =
     editMode.style.display === "block" ? editMode.value : viewMode.textContent;
@@ -283,41 +297,66 @@ function toggleEdit() {
   const outputEdit = document.getElementById("outputEdit");
   const editBtn = document.getElementById("editBtn");
   const toolbar = document.getElementById("outputToolbar");
+  const header = document.querySelector("header");
+  
+  if (outputView.textContent === "" ) 
+    return Swal.fire({
+      icon: "warning",
+      title: "Oops...",
+      text: "Please generate the report first!"
+    });
+  // Set toolbar position
+  toolbar.style.top = `${header.offsetHeight}px`;
+
+  // Remove leftover animation classes
+  outputView.classList.remove("slide-in", "slide-out");
+  outputEdit.classList.remove("slide-in", "slide-out");
 
   if (!editingMode) {
-    const toolbar = document.querySelector(".output-toolbar");
-    const header = document.querySelector("header");
-    toolbar.style.top = `${header.offsetHeight}px`;
-
+    // --- ENTER EDIT MODE ---
     editingMode = true;
     document.getElementById("list").style.display = "none";
     toolbar.classList.add("fullscreen");
 
-    outputEdit.style.display = "block";
-    outputEdit.classList.add("edit-fullscreen");
-    outputView.style.display = "none";
+    // Animate view out
+    outputView.classList.add("slide-out");
+    setTimeout(() => {
+      outputView.style.display = "none";
 
-    editBtn.textContent = "💾 Save";
-    outputEdit.focus();
+      // Animate editor in
+      outputEdit.style.display = "block";
+      outputEdit.classList.add("edit-fullscreen", "slide-in");
+
+      // Keep content synced
+      outputEdit.value = outputView.textContent;
+
+      editBtn.textContent = "💾 Save";
+      outputEdit.focus();
+    }, 400);
+
   } else {
+    // --- SAVE AND EXIT EDIT MODE ---
     editingMode = false;
+
+    // Save edited content
     outputView.textContent = outputEdit.value;
 
-    outputEdit.style.display = "none";
-    outputEdit.classList.remove("edit-fullscreen");
-    outputView.style.display = "block";
+    // Animate editor out
+    outputEdit.classList.remove("slide-in");
+    outputEdit.classList.add("slide-out");
+    setTimeout(() => {
+      outputEdit.style.display = "none";
 
-    toolbar.classList.remove("fullscreen");
-    editBtn.textContent = "✏️ Edit";
+      // Animate view in
+      outputView.style.display = "block";
+      outputView.classList.add("slide-in");
 
-    document.getElementById("list").style.display = "block";
-    renderList();
+      toolbar.classList.remove("fullscreen");
+      editBtn.textContent = "✏️ Edit";
+
+      document.getElementById("list").style.display = "block";
+      renderList();
+    }, 400);
   }
 }
 
-function closeOutput() {
-  document.getElementById("outputView").textContent = "";
-  document.getElementById("outputEdit").value = "";
-}
-
-document.getElementById("currentDate").innerText = formatDate(new Date());

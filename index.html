@@ -41,6 +41,38 @@
               <label class="form-check-label" for="combined"> Combined</label>
             </div>
           </div>
+
+          <div class="time-selection">
+            <label for="time">⏰ Time:</label>
+            <select id="time">
+              <option value="11:30Am - 12:30Pm">11:30 AM - 12:30 PM</option>
+              <option value="11:00Am - 12:00Pm">11:00 AM - 12:00 PM</option>
+              <option value="10:30Am - 11:30Pm">10:30 AM - 11:30 AM</option>
+              <option value="10:00Am - 11:00Am">10:00 AM - 11:00 AM</option>
+            </select>
+          </div>
+
+          <div class="time-selection">
+            <div class="link-input">
+              <label for="tldv">📹 TLDV Link:</label>
+              <input type="url" id="tldv" placeholder="paste TLDV link">
+            </div>
+          </div>
+
+          <div class="time-selection">
+            <div class="link-input">
+              <label for="meetlist">📋 Meet List Link:</label>
+              <input type="url" id="meetlist" placeholder="Paste Meet list link">
+            </div>
+          </div>
+
+          <div class="time-selection">
+            <div class="link-input">
+              <label for="name">🫵Enter Your Name:</label>
+              <input type="name" id="reportBy" placeholder="🫵Enter your name" autocomplete="off">
+            </div>
+          </div>
+
           <!-- List of students or attendance items will be rendered here -->
           <div class="alt-cs-text" id="list"></div>
           <!-- Button to generate attendance output -->
@@ -69,6 +101,7 @@
   </div>
 
   <!-- Main JavaScript file -->
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="script.js"></script>
 </body>
 
