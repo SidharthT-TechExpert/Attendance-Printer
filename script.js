@@ -166,7 +166,7 @@ function updateNameColors() {
       nameSpan.style.fontWeight = 'bold';
 
       if (altChecked) {
-        nameSpan.style.color = '#ff9800'; // yellow
+        nameSpan.style.color = 'var(--bs-warning)'; // yellow
         nameSpan.style.fontWeight = 'bold';
         nameSpan.style.textShadow = '1px 1px 2px red';
       } else if (absentChecked) {
