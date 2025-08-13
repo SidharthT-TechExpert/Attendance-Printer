@@ -35,7 +35,6 @@ const Group_2 = [
   "Muhammed Shibili K",
   "Reuben Varghese",
   "Sarath A",
-  "Muhammed Shibili.k",
   "Solaman KJ",
   "Swagath TV",
   "Tijo Thomas",
