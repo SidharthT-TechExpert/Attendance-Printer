@@ -114,11 +114,11 @@ checkboxes.forEach((cb) => {
       checkboxes.forEach((other) => {
         if (other !== this) other.checked = false;
       });
-    }else{
+    } else {
       displayNames = [];
       status = {};
       isRP = {};
-      rawNames = []
+      rawNames = [];
       renderList();
     }
   });
@@ -154,30 +154,29 @@ function mark(name, state, checkbox) {
 }
 
 function updateNameColors() {
-  document.querySelectorAll('.person').forEach((row) => {
+  document.querySelectorAll(".person").forEach((row) => {
     const altChecked = row.querySelector('input[name="alt"]').checked;
     const absentChecked = row.querySelector('input[name="Absent"]').checked;
-    const nameSpan = row.querySelector('.name');
+    const nameSpan = row.querySelector(".name");
 
     if (nameSpan) {
       // Reset styles first
-      nameSpan.style.color = '';
-      nameSpan.style.fontWeight = 'bold';
-      nameSpan.style.textShadow = '';
-      
+      nameSpan.style.color = "";
+      nameSpan.style.fontWeight = "bold";
+      nameSpan.style.textShadow = "";
+
       if (altChecked) {
-        nameSpan.style.color = 'var(--bs-warning)'; // yellow
-        nameSpan.style.fontWeight = 'bold';
-        nameSpan.style.textShadow = '1px 1px 2px red';
+        nameSpan.style.color = "var(--bs-warning)"; // yellow
+        nameSpan.style.fontWeight = "bold";
+        nameSpan.style.textShadow = "1px 1px 2px red";
       } else if (absentChecked) {
-        nameSpan.style.color = 'var(--bs-danger)'; // red
-        nameSpan.style.fontWeight = 'bold';
-        nameSpan.style.textShadow = '1px 1px 2px darkred';
+        nameSpan.style.color = "var(--bs-danger)"; // red
+        nameSpan.style.fontWeight = "bold";
+        nameSpan.style.textShadow = "1px 1px 2px darkred";
       }
     }
   });
 }
-
 
 function generateOutput() {
   const Mean = "📒 COMMUNICATION SESSION REPORT";
@@ -197,40 +196,56 @@ function generateOutput() {
   const Detalis = `${Duck}\n${Mean} \n🎓 Batch :${Batch} ${GroupName} \n📅 Date :${date}\n⏰ Time :${Time} \n👨🏻‍🏫 Trainer :${Trainer}\n👫 Coordinators :${Coordinators}\n${Duck}\n\n`;
   const Report = "♻ Session Overview:\n";
 
+  let count = 1;
   const presentees =
     `\n\n🟩 Presentees\n\n` +
     Object.keys(status)
       .filter((n) => status[n] === "present")
+      .sort((a, b) => a.localeCompare(b))
       .map((n) => `✅ ${n}`)
       .join("\n");
 
-  const other =
+  count = 1;
+  let other =
     "\n\n🟨 Attending alternative cs\n\n" +
     Object.keys(status)
       .filter((n) => status[n] === "other")
-      .map((n) => `☑️ ${n}`)
+      .sort((a, b) => a.localeCompare(b))
+      .map((n) => `${count++}. ${n}`)
       .join("\n");
+  other = count === 1 ? "" : other;
 
-  let count = 1;
-  const absentees =
+  count = 1;
+  let absentees =
     "\n\n❌ Absentees ❌\n\n" +
     Object.keys(status)
       .filter((n) => status[n] === "absent")
+      .sort((a, b) => a.localeCompare(b))
       .map((n) => `${count++}. ${n}`)
       .join("\n");
+  absentees = count === 1 ? "" : absentees;
 
   count = 1;
-  const RP =
+  let RP =
     "\n\n🔃 Refresh Period 🔃\n\n" +
     Object.keys(status)
       .filter((n) => status[n] === "RP")
+      .sort((a, b) => a.localeCompare(b))
       .map((n) => `${count++}. ${n}`)
       .join("\n");
+  RP = count === 1 ? "" : RP;
 
   const link = `\n\n🔗 Link: \n   Tldv:\n   Meet list:\n\n ✍ Report By : `;
 
-  document.getElementById("output").value =
+  // FINAL OUTPUT
+  const finalText =
     Detalis + Report + presentees + other + absentees + RP + link;
+
+  // Show in view mode
+  document.getElementById("outputView").textContent = finalText;
+
+  // Keep edit mode synced
+  document.getElementById("outputEdit").value = finalText;
 }
 
 function formatDate(date) {
@@ -241,17 +256,67 @@ function formatDate(date) {
 }
 
 function copyOutput() {
-  const output = document.getElementById("output");
+  const viewMode = document.getElementById("outputView");
+  const editMode = document.getElementById("outputEdit");
+  const copyBtn = document.querySelector(".copy-btn");
+
+  // Get text from whichever mode is visible
+  const textToCopy =
+    editMode.style.display === "block" ? editMode.value : viewMode.textContent;
+
   navigator.clipboard
-    .writeText(output.value)
+    .writeText(textToCopy)
     .then(() => {
-      const btn = document.querySelector(".copy-btn");
-      btn.innerText = "✅ Copied!";
-      setTimeout(() => (btn.innerText = "📋 Copy"), 2000);
+      copyBtn.innerText = "✅ Copied!";
+      setTimeout(() => (copyBtn.innerText = "📋 Copy"), 2000);
     })
     .catch((err) => {
       console.error("Failed to copy: ", err);
     });
+}
+
+let editingMode = false;
+
+function toggleEdit() {
+  const outputView = document.getElementById("outputView");
+  const outputEdit = document.getElementById("outputEdit");
+  const editBtn = document.getElementById("editBtn");
+  const toolbar = document.getElementById("outputToolbar");
+
+  if (!editingMode) {
+    const toolbar = document.querySelector(".output-toolbar");
+    const header = document.querySelector("header");
+    toolbar.style.top = `${header.offsetHeight}px`;
+
+    editingMode = true;
+    document.getElementById("list").style.display = "none";
+    toolbar.classList.add("fullscreen");
+
+    outputEdit.style.display = "block";
+    outputEdit.classList.add("edit-fullscreen");
+    outputView.style.display = "none";
+
+    editBtn.textContent = "💾 Save";
+    outputEdit.focus();
+  } else {
+    editingMode = false;
+    outputView.textContent = outputEdit.value;
+
+    outputEdit.style.display = "none";
+    outputEdit.classList.remove("edit-fullscreen");
+    outputView.style.display = "block";
+
+    toolbar.classList.remove("fullscreen");
+    editBtn.textContent = "✏️ Edit";
+
+    document.getElementById("list").style.display = "block";
+    renderList();
+  }
+}
+
+function closeOutput() {
+  document.getElementById("outputView").textContent = "";
+  document.getElementById("outputEdit").value = "";
 }
 
 document.getElementById("currentDate").innerText = formatDate(new Date());

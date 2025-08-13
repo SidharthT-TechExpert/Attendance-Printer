@@ -48,10 +48,21 @@
           <!-- Output section with copy button -->
           <div class="d-flex justify-content-between align-items-center mt-3">
             <span><strong>Output</strong></span>
-            <button class="copy-btn" onclick="copyOutput()">📋 Copy</button>
+
+            <div id="outputToolbar" class="output-toolbar">
+              <button class="copy-btn" onclick="copyOutput()">📋 Copy</button>
+              <button id="editBtn" class="edit-btn" onclick="toggleEdit()">✏️ Edit</button>
+            </div>
+
           </div>
-          <!-- Output textarea (readonly) -->
-          <textarea id="output" class="form-control" style="padding-top: 35px;" readonly></textarea>
+
+
+          <!-- View Mode -->
+          <pre id="outputView" class="form-control" style="padding-top: 35px; white-space: pre-wrap;"></pre>
+
+          <!-- Edit Mode -->
+          <textarea id="outputEdit" class="form-control" style="padding-top: 35px; display:none;"></textarea>
+
         </div>
       </div>
     </div>

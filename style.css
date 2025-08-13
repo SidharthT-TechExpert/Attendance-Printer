@@ -4,6 +4,9 @@
   --secondary-color: #00b7c2;
   /* Light aqua */
   --accent-color: #f4f7f9;
+
+  --header-height: 60px;
+
 }
 
 body {
@@ -181,8 +184,97 @@ input[type="checkbox"] {
   border-color: transparent transparent #e53935 transparent;
 }
 
-
 .alt-cs-text {
   font-weight: bold;
   color: #2b01fb; /* matches your 🟨 color */
+}
+
+.edit-btn {
+  background: linear-gradient(90deg, #4caf50, #81c784);
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 5px;
+}
+
+.edit-btn:hover {
+  background: linear-gradient(90deg, #81c784, #4caf50);
+  transform: scale(1.05);
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.edit-fullscreen {
+  position: fixed;
+  top: var(--header-height, 60px); /* leave space for header */
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - var(--header-height, 60px));
+  background: #fff;
+  z-index: 2000;
+  padding: 20px;
+  border-radius: 0;
+  resize: none;
+}
+
+
+.fullscreen-toolbar {
+  position: fixed;
+  top: 10px;
+  right: 20px;
+  z-index: 3000;
+  display: flex;
+  gap: 8px;
+}
+
+.output-toolbar.fullscreen {
+  position: fixed;
+  top: var(--header-height, 60px);
+  right: 20px;
+  z-index: 3000;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 6px 10px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+}
+
+header {
+  z-index: 3001; /* higher than editor's 2000 */
+}
+
+.output-toolbar {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.output-toolbar.fullscreen {
+  position: fixed;
+  top: 10px;
+  right: 20px;
+  z-index: 3000;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 6px 10px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+}
+
+.close-btn {
+  background: linear-gradient(90deg, #f44336, #e57373);
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: linear-gradient(90deg, #e57373, #f44336);
+  transform: scale(1.05);
 }
