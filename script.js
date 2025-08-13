@@ -355,7 +355,6 @@ function toggleEdit() {
       editBtn.textContent = "✏️ Edit";
 
       document.getElementById("list").style.display = "block";
-      renderList();
     }, 400);
   }
 }
