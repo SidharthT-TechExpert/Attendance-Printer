@@ -193,11 +193,13 @@ function generateOutput() {
       : " Arun Narayan Nair & Muhammed Shibili K $ Ajnas Muhammed";
   const Trainer = " Afzal Nazar";
   const Duck = "🔷🔷🔷🔷🔷🔷🔷🔷🔷🔷🔷";
- const tldv = document.getElementById("tldv").value.trim();
+  const tldv = document.getElementById("tldv").value.trim();
   const meetList = document.getElementById("meetlist").value.trim();
   const tldvLink = tldv ? `Tldv: ${tldv}` : "Tldv: Not provided";
-  const meetListLink = meetList ? `Meet list: ${meetList}` : "Meet list: Not provided";
-   const reportBy = document.getElementById("reportBy").value.trim();
+  const meetListLink = meetList
+    ? `Meet list: ${meetList}`
+    : "Meet list: Not provided";
+  const reportBy = document.getElementById("reportBy").value.trim();
 
   // Prepare the details section
 
@@ -216,7 +218,7 @@ function generateOutput() {
 
   count = 1;
   let other =
-    "\n\n🟨 Attending alternative cs\n\n" +
+    "\n\n🟨 Attending alternative cs :\n\n" +
     Object.keys(status)
       .filter((n) => status[n] === "other")
       .sort((a, b) => a.localeCompare(b))
@@ -269,11 +271,11 @@ function copyOutput() {
   const editMode = document.getElementById("outputEdit");
   const copyBtn = document.querySelector(".copy-btn");
 
-  if (viewMode.textContent === "" ) 
+  if (viewMode.textContent === "")
     return Swal.fire({
       icon: "warning",
       title: "Oops...",
-      text: "Please generate the report first!"
+      text: "Please generate the report first!",
     });
   // Get text from whichever mode is visible
   const textToCopy =
@@ -298,12 +300,12 @@ function toggleEdit() {
   const editBtn = document.getElementById("editBtn");
   const toolbar = document.getElementById("outputToolbar");
   const header = document.querySelector("header");
-  
-  if (outputView.textContent === "" ) 
+
+  if (outputView.textContent === "")
     return Swal.fire({
       icon: "warning",
       title: "Oops...",
-      text: "Please generate the report first!"
+      text: "Please generate the report first!",
     });
   // Set toolbar position
   toolbar.style.top = `${header.offsetHeight}px`;
@@ -333,7 +335,6 @@ function toggleEdit() {
       editBtn.textContent = "💾 Save";
       outputEdit.focus();
     }, 400);
-
   } else {
     // --- SAVE AND EXIT EDIT MODE ---
     editingMode = false;
@@ -358,4 +359,3 @@ function toggleEdit() {
     }, 400);
   }
 }
-
