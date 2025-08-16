@@ -273,6 +273,7 @@ function generateOutput() {
     OtherBatch.sort((a, b) => a.localeCompare(b))
       .map((n) => `✨ ${n} `)
       .join("\n");
+     
       
   OtherBatchs = OtherBatch[0] === '' ? "" : OtherBatchs;
 
