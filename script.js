@@ -240,9 +240,13 @@ function generateOutput() {
   const Detalis = `${Duck}\n${Mean} \n🎓 Batch :${Batch} ${GroupName} \n📅 Date :${date}\n⏰ Time :${Time} \n👨🏻‍🏫 Trainer :${Trainer}\n👫 Coordinators : ${Coordinators}\n${Duck}\n\n`;
   const Report = `♻ Session Overview:\n           ${reportByText}`;
 
-  let count = Object.keys(attendanceStatus).filter(
-    (n) => attendanceStatus[n] === "present"
-  ).length;
+  // Prepare the attendance report
+  counter = ( state , check = attendanceStatus) => {
+    return Object.keys(check).filter((n) => attendanceStatus[n] === state)
+      .length;
+  };
+
+  let count = counter("present");
 
   let presentees =
     `\n\n🟩 Presentees (${count}) :\n\n` +
@@ -253,9 +257,7 @@ function generateOutput() {
       .join("\n");
   presentees = count === 0 ? "" : presentees;
 
-  count = Object.keys(attendanceStatus).filter(
-    (n) => attendanceStatus[n] === "other"
-  ).length;
+  count = counter("other");
 
   let alternative =
     `\n\n🟨 Alternative Session (${count}):\n\n` +
@@ -264,6 +266,7 @@ function generateOutput() {
       .sort((a, b) => a.localeCompare(b))
       .map((n) => `☑️ ${n} `)
       .join("\n");
+
   alternative = count === 0 ? "" : alternative;
 
   count = 0;
@@ -273,13 +276,10 @@ function generateOutput() {
     OtherBatch.sort((a, b) => a.trim().localeCompare(b.trim()))
       .map((n) => `✨ ${n.trim()} `)
       .join("\n");
-     
-      
-  OtherBatches = OtherBatch[0] === '' ? "" : OtherBatches;
 
-  count = Object.keys(attendanceStatus).filter(
-    (n) => attendanceStatus[n] === "absent"
-  ).length;
+  OtherBatches = OtherBatch[0] === "" ? "" : OtherBatches;
+
+  count = counter("absent");
 
   let absentees =
     `\n\n❌ Absentees (${count}) :\n\n` +
@@ -290,9 +290,7 @@ function generateOutput() {
       .join("\n");
   absentees = count === 0 ? "" : absentees;
 
-  count = Object.keys(attendanceStatus).filter(
-    (n) => attendanceStatus[n] === "RP"
-  ).length;
+  count = counter("RP");
 
   let RP =
     `\n\n🔃 Refresh Period (${count}) :\n\n` +
