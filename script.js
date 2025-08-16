@@ -34,6 +34,7 @@ const Group_2 = [
   "Muhammed Shibili K (C)",
   "Reuben Varghese",
   "Sarath A",
+  "Juvek Swamiji (RP)",
   "Solaman KJ",
   "Swagath TV",
   "Tijo Thomas",
@@ -206,21 +207,21 @@ function generateOutput() {
           .join(" & ")
       : null;
   if (Coordinators === null) {
-    let combined = Combined.filter((n) => n.includes("(C)")).map((n) =>n.replace(" (C)", ""));
+    let combined = Combined.filter((n) => n.includes("(C)")).map((n) =>
+      n.replace(" (C)", "")
+    );
     Coordinators = "";
     combined.forEach((n, i) => {
-     if (i === combined.length - 2) {
-        Coordinators += ' - Grp_1 \n👫 Coordinators : '+ n + ' & ';
-      }else if(i === 0 ){
-        Coordinators += n + ' & ';
-      }else if(i === combined.length - 1){
-        Coordinators += n +' - Grp_2 ';
-      }else{
-        Coordinators += n ;
+      if (i === combined.length - 2) {
+        Coordinators += " - Grp_1 \n👫 Coordinators : " + n + " & ";
+      } else if (i === 0) {
+        Coordinators += n + " & ";
+      } else if (i === combined.length - 1) {
+        Coordinators += n + " - Grp_2 ";
+      } else {
+        Coordinators += n;
       }
-      
     });
-      
   }
   const Trainer = " Afzal Nazar";
   const Duck = "🔷🔷🔷🔷🔷🔷🔷🔷🔷🔷🔷";
@@ -231,57 +232,88 @@ function generateOutput() {
     ? `Meet list: ${meetList}`
     : "Meet list: Not provided";
   const reportBy = document.getElementById("reportBy").value.trim();
+  const reportByText = document.getElementById("over").value.trim();
+  let OtherBatch = document.getElementById("Batch").value.trim().split(",");
 
   // Prepare the details section
 
   const Detalis = `${Duck}\n${Mean} \n🎓 Batch :${Batch} ${GroupName} \n📅 Date :${date}\n⏰ Time :${Time} \n👨🏻‍🏫 Trainer :${Trainer}\n👫 Coordinators : ${Coordinators}\n${Duck}\n\n`;
-  const Report = "♻ Session Overview:\n";
+  const Report = `♻ Session Overview:\n           ${reportByText}`;
 
-  let count = 1;
+  let count = Object.keys(attendanceStatus).filter(
+    (n) => attendanceStatus[n] === "present"
+  ).length;
+
   let presentees =
-    `\n\n🟩 Presentees :\n\n` +
+    `\n\n🟩 Presentees (${count}) :\n\n` +
     Object.keys(attendanceStatus)
       .filter((n) => attendanceStatus[n] === "present")
       .sort((a, b) => a.localeCompare(b))
-      .map((n) => `${count++}. ${n}`)
+      .map((n) => `✅ ${n} `)
       .join("\n");
-  presentees = count === 1 ? "" : presentees;
+  presentees = count === 0 ? "" : presentees;
 
-  count = 1;
-  let other =
-    "\n\n🟨 Attending alternative cs :\n\n" +
+  count = Object.keys(attendanceStatus).filter(
+    (n) => attendanceStatus[n] === "other"
+  ).length;
+
+  let alternative =
+    `\n\n🟨 Alternative Session (${count}):\n\n` +
     Object.keys(attendanceStatus)
       .filter((n) => attendanceStatus[n] === "other")
       .sort((a, b) => a.localeCompare(b))
-      .map((n) => `${count++}. ${n}`)
+      .map((n) => `☑️ ${n} `)
       .join("\n");
-  other = count === 1 ? "" : other;
+  alternative = count === 0 ? "" : alternative;
 
-  count = 1;
+  count = 0
+  count = OtherBatch.length;
+  let OtherBatchs =
+    `\n\n🤩 Other Batchs (${count}):\n\n` +
+    OtherBatch.sort((a, b) => a.localeCompare(b))
+      .map((n) => `✨ ${n} `)
+      .join("\n");
+      
+  OtherBatchs = OtherBatch[0] === '' ? "" : OtherBatchs;
+
+  count = Object.keys(attendanceStatus).filter(
+    (n) => attendanceStatus[n] === "absent"
+  ).length;
+
   let absentees =
-    "\n\n❌ Absentees ❌\n\n" +
+    `\n\n❌ Absentees (${count}) :\n\n` +
     Object.keys(attendanceStatus)
       .filter((n) => attendanceStatus[n] === "absent")
       .sort((a, b) => a.localeCompare(b))
-      .map((n) => `${count++}. ${n}`)
+      .map((n) => `❌ ${n} `)
       .join("\n");
-  absentees = count === 1 ? "" : absentees;
+  absentees = count === 0 ? "" : absentees;
 
-  count = 1;
+  count = Object.keys(attendanceStatus).filter(
+    (n) => attendanceStatus[n] === "RP"
+  ).length;
+
   let RP =
-    "\n\n🔃 Refresh Period 🔃\n\n" +
+    `\n\n🔃 Refresh Period (${count}) :\n\n` +
     Object.keys(attendanceStatus)
       .filter((n) => attendanceStatus[n] === "RP")
       .sort((a, b) => a.localeCompare(b))
-      .map((n) => `${count++}. ${n}`)
+      .map((n) => `🔃 ${n} `)
       .join("\n");
-  RP = count === 1 ? "" : RP;
+  RP = count === 0 ? "" : RP;
 
   const link = `\n\n🔗 Link: \n\n      ${tldvLink}\n      ${meetListLink}\n\n ✍ Report By : ${reportBy}`;
 
   // FINAL OUTPUT
   const finalText =
-    Detalis + Report + presentees + other + absentees + RP + link;
+    Detalis +
+    Report +
+    presentees +
+    alternative +
+    OtherBatchs +
+    absentees +
+    RP +
+    link;
 
   // Show in view mode
   document.getElementById("outputView").textContent = finalText;
