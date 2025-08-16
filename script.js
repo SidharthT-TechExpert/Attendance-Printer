@@ -268,14 +268,14 @@ function generateOutput() {
 
   count = 0;
   count = OtherBatch.length;
-  let OtherBatchs =
-    `\n\n🤩 Other Batchs (${count}):\n\n` +
-    OtherBatch.sort((a, b) => a.localeCompare(b))
-      .map((n) => `✨ ${n.trimStart()} `)
+  let OtherBatches =
+    `\n\n🤩 Other Batches (${count}):\n\n` +
+    OtherBatch.sort((a, b) => a.trim().localeCompare(b.trim()))
+      .map((n) => `✨ ${n.trim()} `)
       .join("\n");
      
       
-  OtherBatchs = OtherBatch[0] === '' ? "" : OtherBatchs;
+  OtherBatches = OtherBatch[0] === '' ? "" : OtherBatches;
 
   count = Object.keys(attendanceStatus).filter(
     (n) => attendanceStatus[n] === "absent"
@@ -311,7 +311,7 @@ function generateOutput() {
     Report +
     presentees +
     alternative +
-    OtherBatchs +
+    OtherBatches +
     absentees +
     RP +
     link;
