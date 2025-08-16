@@ -266,7 +266,7 @@ function generateOutput() {
       .join("\n");
   alternative = count === 0 ? "" : alternative;
 
-  count = 0
+  count = 0;
   count = OtherBatch.length;
   let OtherBatchs =
     `\n\n🤩 Other Batchs (${count}):\n\n` +
