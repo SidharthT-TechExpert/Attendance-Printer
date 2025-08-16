@@ -271,7 +271,7 @@ function generateOutput() {
   let OtherBatchs =
     `\n\n🤩 Other Batchs (${count}):\n\n` +
     OtherBatch.sort((a, b) => a.localeCompare(b))
-      .map((n) => `✨ ${n} `)
+      .map((n) => `✨ ${n.trimStart()} `)
       .join("\n");
      
       
