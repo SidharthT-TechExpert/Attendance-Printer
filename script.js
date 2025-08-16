@@ -240,65 +240,51 @@ function generateOutput() {
   const Detalis = `${Duck}\n${Mean} \n🎓 Batch :${Batch} ${GroupName} \n📅 Date :${date}\n⏰ Time :${Time} \n👨🏻‍🏫 Trainer :${Trainer}\n👫 Coordinators : ${Coordinators}\n${Duck}\n\n`;
   const Report = `♻ Session Overview:\n           ${reportByText}`;
 
+  let textMaker = (text, icon, status, textIcon, check = attendanceStatus) => {
+    return (
+      `\n\n${icon} ${text} (${counter(status, check)}) :\n\n` +
+      Object.keys(check)
+        .filter((n) => attendanceStatus[n] === status)
+        .sort((a, b) => a.localeCompare(b))
+        .map((n) => `${textIcon} ${n} `)
+        .join("\n")
+    );
+  };
+  let textMaker2 = (text, icon, textIcon, check = OtherBatch) => {
+    return (
+      `\n\n${icon} ${text} (${check.length})) :\n\n` +
+      check
+        .sort((a, b) => a.trim().localeCompare(b.trim()))
+        .map((n) => `${textIcon} ${n.trimStart()} `)
+        .join("\n")
+    );
+  };
+
   // Prepare the attendance report
-  counter = ( state , check = attendanceStatus) => {
+  const counter = (state, check = attendanceStatus) => {
     return Object.keys(check).filter((n) => attendanceStatus[n] === state)
       .length;
   };
 
   let count = counter("present");
-
-  let presentees =
-    `\n\n🟩 Presentees (${count}) :\n\n` +
-    Object.keys(attendanceStatus)
-      .filter((n) => attendanceStatus[n] === "present")
-      .sort((a, b) => a.localeCompare(b))
-      .map((n) => `✅ ${n} `)
-      .join("\n");
+  let presentees = textMaker("Presentees", "🟩", "present", "✅");
   presentees = count === 0 ? "" : presentees;
 
   count = counter("other");
-
-  let alternative =
-    `\n\n🟨 Alternative Session (${count}):\n\n` +
-    Object.keys(attendanceStatus)
-      .filter((n) => attendanceStatus[n] === "other")
-      .sort((a, b) => a.localeCompare(b))
-      .map((n) => `☑️ ${n} `)
-      .join("\n");
-
+  let alternative = textMaker("Alternative Session", "🟨", "other", "☑️");
   alternative = count === 0 ? "" : alternative;
 
   count = 0;
   count = OtherBatch.length;
-  let OtherBatches =
-    `\n\n🤩 Other Batches (${count}):\n\n` +
-    OtherBatch.sort((a, b) => a.trim().localeCompare(b.trim()))
-      .map((n) => `✨ ${n.trim()} `)
-      .join("\n");
-
+  let OtherBatches = textMaker2("Other Batches", "🤩", "✨");
   OtherBatches = OtherBatch[0] === "" ? "" : OtherBatches;
 
   count = counter("absent");
-
-  let absentees =
-    `\n\n❌ Absentees (${count}) :\n\n` +
-    Object.keys(attendanceStatus)
-      .filter((n) => attendanceStatus[n] === "absent")
-      .sort((a, b) => a.localeCompare(b))
-      .map((n) => `❌ ${n} `)
-      .join("\n");
+  let absentees = textMaker("Absentees", "❌", "absent", "🚫");
   absentees = count === 0 ? "" : absentees;
 
   count = counter("RP");
-
-  let RP =
-    `\n\n🔃 Refresh Period (${count}) :\n\n` +
-    Object.keys(attendanceStatus)
-      .filter((n) => attendanceStatus[n] === "RP")
-      .sort((a, b) => a.localeCompare(b))
-      .map((n) => `🔃 ${n} `)
-      .join("\n");
+  let RP = textMaker("Refresh Period", "🔃", "RP", "🔄");
   RP = count === 0 ? "" : RP;
 
   const link = `\n\n🔗 Link: \n\n      ${tldvLink}\n      ${meetListLink}\n\n ✍ Report By : ${reportBy}`;

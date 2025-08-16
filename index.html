@@ -22,7 +22,7 @@
       <div class="col-lg-6 col-md-8">
         <div class="container-box">
           <!-- Legend for attendance status -->
-          <div class="p-3 bg-light border rounded mb-3 text-dark">
+          <div class="p-3 bg-light border rounded mb-3 text-dark" style="font-weight: bold;">
             ✅ Present: Default <br />
             🟨 Alternative CS <br />
             ❌ Absent
@@ -44,7 +44,7 @@
 
           <div class="time-selection">
             <label for="time">⏰ Time:</label>
-            <select id="time">
+            <select id="time" style="font-weight: bold;">
               <option value="11:30Am - 12:30Pm">11:30 AM - 12:30 PM</option>
               <option value="11:00Am - 12:00Pm">11:00 AM - 12:00 PM</option>
               <option value="10:30Am - 11:30Pm">10:30 AM - 11:30 AM</option>
@@ -55,37 +55,40 @@
           <div class="time-selection">
             <div class="link-input">
               <label for="tldv">📹 TLDV Link:</label>
-              <input type="url" id="tldv" placeholder="paste TLDV link">
+              <input type="url" style="font-weight: bold;" id="tldv" placeholder="paste TLDV link">
             </div>
           </div>
-          
+
           <div class="time-selection">
             <div class="link-input">
               <label for="meetlist">📋 Meet List Link:</label>
-              <input type="url" id="meetlist" placeholder="Paste Meet list link">
+              <input type="url" id="meetlist" style="font-weight: bold;" placeholder="Paste Meet list link">
             </div>
           </div>
-          
+
           <div class="time-selection">
             <div class="link-input">
               <label for="name">🫵Enter Your Name:</label>
-              <input type="name" id="reportBy" placeholder="🫵Enter your name" autocomplete="off">
+              <input type="name" id="reportBy" style="font-weight: bold;" placeholder="🫵Enter your name"
+                autocomplete="off">
             </div>
           </div>
           <div class="time-selection">
             <div class="link-input">
               <label for="tldv">♻ Session Overview:</label>
-              <input type="text" id="over" placeholder="paste your session overview hear" autocomplete="off">
+              <input type="text" id="over" placeholder="paste your session overview hear" autocomplete="off"
+                style="font-weight: bold;">
             </div>
           </div>
           <div class="time-selection">
             <div class="link-input">
               <label for="tldv">🤩 Other Batchs :</label>
-              <input type="text" id="Batch" placeholder="🫵Enter name with comma " autocomplete="off" style="font-weight: bold;">
+              <input type="text" id="Batch" placeholder="🫵Enter name with comma " autocomplete="off"
+                style="font-weight: bold;">
             </div>
           </div>
           <hr>
-          
+
           <!-- List of students or attendance items will be rendered here -->
           <div class="alt-cs-text" id="list"></div>
           <!-- Button to generate attendance output -->
