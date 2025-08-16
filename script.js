@@ -4,17 +4,17 @@ const Group_1 = [
   "Aifa Sana Uk",
   "Akhil Joy (Aj)",
   "Aswathy K (RP)",
-  "Arun Narayan Nair",
+  "Arun Narayan Nair (C)",
   "Chitra Arun (RP)",
   "Christin Johny",
   "Fasalu Rahman",
   "Govind S Kumar",
-  "Jagan",
+  "Jagan (C)",
   "Jasima (RP)",
   "Kadeejatu Zaiba",
   "Karthik B",
   "Krishna (RP)",
-  "Midhun Manoj",
+  "Midhun Manoj (RP)",
   "Neethu George",
   "Praveena E S",
   "Riyas Kv (RP)",
@@ -25,14 +25,13 @@ const Group_1 = [
 
 const Group_2 = [
   "Ahammed Junaid",
-  "Ajnas Muhammed",
+  "Ajnas Muhammed (C)",
   "Akhil",
-  "Arshad M",
   "Arshad Chappangan",
   "Bijo P A",
   "Gowry N",
   "Mohamed Nabeel",
-  "Muhammed Shibili K",
+  "Muhammed Shibili K (C)",
   "Reuben Varghese",
   "Sarath A",
   "Solaman KJ",
@@ -59,8 +58,9 @@ const checkboxes = document.querySelectorAll('input[name="group"]');
 
 let rawNames;
 let displayNames = [];
-let status = {};
+let attendanceStatus = {};
 let isRP = {};
+let Coordinators = {};
 let Group = "";
 
 // Initialize Bootstrap tooltips
@@ -93,21 +93,27 @@ checkboxes.forEach((cb) => {
           : "Combined";
 
       displayNames = [];
-      status = {};
+      attendanceStatus = {};
       isRP = {};
 
       displayNames = rawNames
         .filter((n) => {
           if (n.includes("(RP)")) {
             const cleanName = n.replace(" (RP)", "");
-            isRP[cleanName] = true;
-            status[cleanName] = "RP";
+            attendanceStatus[cleanName] = "RP";
             return false;
+          } else if (n.includes("(C)")) {
+            const cleanName = n.replace(" (C)", "");
+            attendanceStatus[cleanName] = "C";
+            return true;
           }
           return true;
         })
         .map((n) => {
-          status[n] = "present";
+          if (n.includes("(C)")) {
+            return n.replace("(C)", "");
+          }
+          attendanceStatus[n] = "present";
           return n;
         });
 
@@ -127,6 +133,7 @@ checkboxes.forEach((cb) => {
 });
 
 function renderList() {
+  // Clear previous list
   const listDiv = document.getElementById("list");
   listDiv.innerHTML = "";
 
@@ -151,7 +158,7 @@ function mark(name, state, checkbox) {
   cbs.forEach((cb) => {
     if (cb !== checkbox) cb.checked = false; // uncheck others
   });
-  status[name] = checkbox.checked ? state : "present";
+  attendanceStatus[name] = checkbox.checked ? state : "present";
   updateNameColors();
 }
 
@@ -187,12 +194,34 @@ function generateOutput() {
   const date = formatDate(new Date());
   const GroupName = Group;
   const Time = time;
-  const Coordinators =
+
+  let Coordinators =
     Group === "Group 1"
-      ? " Arun Narayan Nair & Jagan"
+      ? Group_1.filter((n) => n.includes("(C)"))
+          .map((n) => n.replace(" (C)", ""))
+          .join(" & ")
       : Group === "Group 2"
-      ? " Muhammed Shibili K & Ajnas Muhammed"
-      : " Arun Narayan Nair & Muhammed Shibili K $ Ajnas Muhammed";
+      ? Group_2.filter((n) => n.includes("(C)"))
+          .map((n) => n.replace(" (C)", ""))
+          .join(" & ")
+      : null;
+  if (Coordinators === null) {
+    let combined = Combined.filter((n) => n.includes("(C)")).map((n) =>n.replace(" (C)", ""));
+    Coordinators = "";
+    combined.forEach((n, i) => {
+     if (i === combined.length - 2) {
+        Coordinators += ' - Grp_1 \n👫 Coordinators : '+ n + ' & ';
+      }else if(i === 0 ){
+        Coordinators += n + ' & ';
+      }else if(i === combined.length - 1){
+        Coordinators += n +' - Grp_2 ';
+      }else{
+        Coordinators += n ;
+      }
+      
+    });
+      
+  }
   const Trainer = " Afzal Nazar";
   const Duck = "🔷🔷🔷🔷🔷🔷🔷🔷🔷🔷🔷";
   const tldv = document.getElementById("tldv").value.trim();
@@ -205,14 +234,14 @@ function generateOutput() {
 
   // Prepare the details section
 
-  const Detalis = `${Duck}\n${Mean} \n🎓 Batch :${Batch} ${GroupName} \n📅 Date :${date}\n⏰ Time :${Time} \n👨🏻‍🏫 Trainer :${Trainer}\n👫 Coordinators :${Coordinators}\n${Duck}\n\n`;
+  const Detalis = `${Duck}\n${Mean} \n🎓 Batch :${Batch} ${GroupName} \n📅 Date :${date}\n⏰ Time :${Time} \n👨🏻‍🏫 Trainer :${Trainer}\n👫 Coordinators : ${Coordinators}\n${Duck}\n\n`;
   const Report = "♻ Session Overview:\n";
 
   let count = 1;
   let presentees =
     `\n\n🟩 Presentees :\n\n` +
-    Object.keys(status)
-      .filter((n) => status[n] === "present")
+    Object.keys(attendanceStatus)
+      .filter((n) => attendanceStatus[n] === "present")
       .sort((a, b) => a.localeCompare(b))
       .map((n) => `${count++}. ${n}`)
       .join("\n");
@@ -221,8 +250,8 @@ function generateOutput() {
   count = 1;
   let other =
     "\n\n🟨 Attending alternative cs :\n\n" +
-    Object.keys(status)
-      .filter((n) => status[n] === "other")
+    Object.keys(attendanceStatus)
+      .filter((n) => attendanceStatus[n] === "other")
       .sort((a, b) => a.localeCompare(b))
       .map((n) => `${count++}. ${n}`)
       .join("\n");
@@ -231,8 +260,8 @@ function generateOutput() {
   count = 1;
   let absentees =
     "\n\n❌ Absentees ❌\n\n" +
-    Object.keys(status)
-      .filter((n) => status[n] === "absent")
+    Object.keys(attendanceStatus)
+      .filter((n) => attendanceStatus[n] === "absent")
       .sort((a, b) => a.localeCompare(b))
       .map((n) => `${count++}. ${n}`)
       .join("\n");
@@ -241,8 +270,8 @@ function generateOutput() {
   count = 1;
   let RP =
     "\n\n🔃 Refresh Period 🔃\n\n" +
-    Object.keys(status)
-      .filter((n) => status[n] === "RP")
+    Object.keys(attendanceStatus)
+      .filter((n) => attendanceStatus[n] === "RP")
       .sort((a, b) => a.localeCompare(b))
       .map((n) => `${count++}. ${n}`)
       .join("\n");
