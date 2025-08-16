@@ -255,7 +255,7 @@ function generateOutput() {
       `\n\n${icon} ${text} (${check.length})) :\n\n` +
       check
         .sort((a, b) => a.trim().localeCompare(b.trim()))
-        .map((n) => `${textIcon} ${n.trimStart()} `)
+        .map((n) => `${textIcon} ${n.trimStart().charAt(0).toUpperCase()+ n.trimStart().slice(1)} `)
         .join("\n")
     );
   };
