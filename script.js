@@ -1,4 +1,4 @@
-// ====================== GROUP DATA ======================
+/* ====================== GROUP DATA ====================== */
 const Group_1 = [
   "Achyuth J",
   "Adarsh Babu",
@@ -68,23 +68,6 @@ let attendanceStatus = {}; // stores status of each name (present, RP, absent, e
 let isRP = {};             // RP-specific flag for highlighting rows
 let Coordinators = {};     // stores coordinators per group
 let Group = "";            // holds selected group label
-
-
-// ====================== INIT BOOTSTRAP TOOLTIP & DATE ======================
-document.addEventListener("DOMContentLoaded", function () {
-  // Enable Bootstrap tooltips
-  const tooltipTriggerList = [].slice.call(
-    document.querySelectorAll('[data-bs-toggle="tooltip"]')
-  );
-  tooltipTriggerList.map(function (tooltipTriggerEl) {
-    return new bootstrap.Tooltip(tooltipTriggerEl);
-  });
-
-  // Display current date
-  const currentDate = document.getElementById("currentDate");
-  currentDate.textContent = formatDate(new Date());
-});
-
 
 // ====================== GROUP SELECTION ======================
 checkboxes.forEach((cb) => {
@@ -466,3 +449,18 @@ function toggleEdit() {
     }, 400);
   }
 }
+
+// ====================== INIT BOOTSTRAP TOOLTIP & DATE ======================
+document.addEventListener("DOMContentLoaded", function () {
+  // Enable Bootstrap tooltips
+  const tooltipTriggerList = [].slice.call(
+    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  );
+  tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+
+  // Display current date
+  const currentDate = document.getElementById("currentDate");
+  currentDate.textContent = formatDate(new Date());
+});
