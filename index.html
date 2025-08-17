@@ -44,15 +44,20 @@
 
           <div class="row g-3 ">
             <!-- Session Time -->
-            <div class="col-md-4 time-selection">
-              <label for="time" class="form-label">⏰ Session Time</label>
-              <select id="time" class="form-select fw-bold">
-                <option value="11:30Am - 12:30Pm">11:30 AM - 12:30 PM</option>
-                <option value="11:00Am - 12:00Pm">11:00 AM - 12:00 PM</option>
-                <option value="10:30Am - 11:30Pm">10:30 AM - 11:30 AM</option>
-                <option value="10:00Am - 11:00Am">10:00 AM - 11:00 AM</option>
-              </select>
+            <div class="custom-dropdown col-md-4 time-selection">
+              <label for="time" class="form-label">⏰ Select Time</label>
+              <button class="dropdown-btn">⏰ Select Time <span class="arrow">⌄</span></button>
+              <ul class="dropdown-menu">
+                <li>11:30 AM - 12:30 PM</li>
+                <li>11:00 AM - 12:00 PM</li>
+                <li>10:30 AM - 11:30 AM</li>
+                <li>10:00 AM - 11:00 AM</li>
+              </ul>
+              <input type="hidden" id="time">
             </div>
+
+
+
 
             <!-- TLDV Link -->
             <div class="col-md-4 time-selection">

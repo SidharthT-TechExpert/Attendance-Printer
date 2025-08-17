@@ -62,12 +62,12 @@ const Combined = [...Group_1, ...Group_2];
 const checkboxes = document.querySelectorAll('input[name="group"]');
 
 // ====================== STATE VARIABLES ======================
-let rawNames;              // raw list selected from Group_1 / Group_2 / Combined
-let displayNames = [];     // cleaned names without RP / C tags
+let rawNames; // raw list selected from Group_1 / Group_2 / Combined
+let displayNames = []; // cleaned names without RP / C tags
 let attendanceStatus = {}; // stores status of each name (present, RP, absent, etc.)
-let isRP = {};             // RP-specific flag for highlighting rows
-let Coordinators = {};     // stores coordinators per group
-let Group = "";            // holds selected group label
+let isRP = {}; // RP-specific flag for highlighting rows
+let Coordinators = {}; // stores coordinators per group
+let Group = ""; // holds selected group label
 
 // ====================== GROUP SELECTION ======================
 checkboxes.forEach((cb) => {
@@ -137,7 +137,6 @@ checkboxes.forEach((cb) => {
   });
 });
 
-
 // ====================== RENDER PARTICIPANT LIST ======================
 function renderList() {
   const listDiv = document.getElementById("list");
@@ -148,18 +147,18 @@ function renderList() {
     .forEach((name) => {
       const div = document.createElement("div");
       // Add rp-row class if RP
-      div.className = "person" + (isRP[name] ? " rp-row" : "");
+      div.className = "person col-md-4" + (isRP[name] ? " rp-row" : "");
+      div.style.display = "inline-block";
       div.innerHTML = `
-      <span class="name">${name}</span>
-      <div class="d-flex gap-2">
-          <input name='alt' type="checkbox" class="custom-tooltip" data-tooltip="Attending alternative CS" onchange="mark('${name}','other',this)"> 🟨
-          <input name='Absent' type="checkbox" class="custom-tooltip" data-tooltip="Absent" onchange="mark('${name}','absent',this)"> ❌
+      <div class="name col-md-6" style='display:inline-block;'>${name}</div>
+      <div class="col-md-4" style='display:inline-block;'>
+          <input style='display:inline-block;' name='alt' type="checkbox" class="custom-tooltip" data-tooltip="Attending alternative CS" onchange="mark('${name}','other',this)"> 🟨
+          <input style='display:inline-block;' name='Absent' type="checkbox" class="custom-tooltip" data-tooltip="Absent" onchange="mark('${name}','absent',this)"> ❌
      </div>
     `;
       listDiv.appendChild(div);
     });
 }
-
 
 // ====================== MARK ATTENDANCE ======================
 function mark(name, state, checkbox) {
@@ -175,7 +174,6 @@ function mark(name, state, checkbox) {
   // --- Update color coding ---
   updateNameColors();
 }
-
 
 // ====================== COLOR CODING ======================
 function updateNameColors() {
@@ -202,17 +200,14 @@ function updateNameColors() {
   });
 }
 
-
 // ====================== REPORT GENERATION ======================
 function generateOutput() {
-  const time = document.getElementById("time").value.trim();
-
   // --- Static report headers ---
   const Mean = "📒 COMMUNICATION SESSION REPORT";
   const Batch = " BCR71";
   const date = formatDate(new Date());
   const GroupName = Group;
-  const Time = time;
+  const Time = getSelectedTime(); // Get selected time from custom dropdown
 
   // --- Get Coordinators per group ---
   let Coordinators =
@@ -340,7 +335,6 @@ function generateOutput() {
   document.getElementById("outputEdit").value = finalText;
 }
 
-
 // ====================== UTILITIES ======================
 function formatDate(date) {
   const day = String(date.getDate()).padStart(2, "0");
@@ -348,7 +342,6 @@ function formatDate(date) {
   const year = date.getFullYear();
   return `${day} ${month} ${year}`;
 }
-
 
 // ====================== COPY TO CLIPBOARD ======================
 function copyOutput() {
@@ -378,7 +371,6 @@ function copyOutput() {
       console.error("Failed to copy: ", err);
     });
 }
-
 
 // ====================== TOGGLE EDIT MODE ======================
 let editingMode = false;
@@ -463,4 +455,50 @@ document.addEventListener("DOMContentLoaded", function () {
   // Display current date
   const currentDate = document.getElementById("currentDate");
   currentDate.textContent = formatDate(new Date());
+});
+
+// ====================== CUSTOM DROPDOWN ======================
+document.querySelectorAll(".custom-dropdown").forEach((drop) => {
+  const btn = drop.querySelector(".dropdown-btn");
+  btn.addEventListener("click", () => {
+    drop.classList.toggle("active");
+  });
+  drop.querySelectorAll(".dropdown-menu li").forEach((item) => {
+    item.addEventListener("click", () => {
+      btn.innerHTML =
+        "⏰ " + item.textContent + ' <span class="arrow">⌄</span>';
+      drop.classList.remove("active");
+    });
+  });
+}); 
+
+// Close if clicked outside
+window.addEventListener("click", (e) => {
+  document.querySelectorAll(".custom-dropdown").forEach((drop) => {
+    if (!drop.contains(e.target)) drop.classList.remove("active");
+  });
+}); 
+
+// Function to get the selected time from the custom dropdown function 
+function getSelectedTime() { 
+  const btn = document.querySelector(".custom-dropdown .dropdown-btn");
+   return btn.textContent.replace('⌄','').replace('⏰','').replace('⏰ 🕒',''); // returns the selected label (like "⏰ 11:30 AM - 12:30 PM")
+ }
+ 
+ // When page loads, set default value 
+window.addEventListener("DOMContentLoaded", () => {
+  const defaultTime = "11:30 AM - 12:30 PM"; // <-- your default value
+
+  const btn = document.querySelector(".custom-dropdown .dropdown-btn");
+  const hiddenInput = document.getElementById("time"); // hidden input for form submission
+
+  if (btn) {
+    // Set button text with arrow
+    btn.innerHTML = `⏰ ${defaultTime} <span class="arrow">⌄</span>`;
+  }
+
+  if (hiddenInput) {
+    // Set hidden input value
+    hiddenInput.value = defaultTime;
+  }
 });
