@@ -304,14 +304,14 @@ header {
 
 /* Hover Effect */
 .time-selection select:hover {
-  background: linear-gradient(to right, #e0f7f4, #d9f5f2);
+  background: linear-gradient(to right, #ffffff, #d9f5f2);
   transform: scale(1.03);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
 }
 
 /* Focus Effect */
 .time-selection select:focus {
-  background: linear-gradient(to right, #c3f5ec, #b8f2e8);
+  background: linear-gradient(to right, #bef5eb, #b8f2e8);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   transform: scale(1.05);
 }
@@ -343,6 +343,7 @@ header {
 
 .time-selection:hover {
   transform: scale(1.04) !important;
+  background-color: red;
 }
 
 /* Smooth transition effect */
