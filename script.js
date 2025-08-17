@@ -1,3 +1,4 @@
+// ====================== GROUP DATA ======================
 const Group_1 = [
   "Achyuth J",
   "Adarsh Babu",
@@ -54,31 +55,42 @@ const Group_2 = [
   "Shahna (RP)",
 ];
 
+// Combine both groups
 const Combined = [...Group_1, ...Group_2];
+
+// Checkbox selector for group selection
 const checkboxes = document.querySelectorAll('input[name="group"]');
 
-let rawNames;
-let displayNames = [];
-let attendanceStatus = {};
-let isRP = {};
-let Coordinators = {};
-let Group = "";
+// ====================== STATE VARIABLES ======================
+let rawNames;              // raw list selected from Group_1 / Group_2 / Combined
+let displayNames = [];     // cleaned names without RP / C tags
+let attendanceStatus = {}; // stores status of each name (present, RP, absent, etc.)
+let isRP = {};             // RP-specific flag for highlighting rows
+let Coordinators = {};     // stores coordinators per group
+let Group = "";            // holds selected group label
 
-// Initialize Bootstrap tooltips
+
+// ====================== INIT BOOTSTRAP TOOLTIP & DATE ======================
 document.addEventListener("DOMContentLoaded", function () {
+  // Enable Bootstrap tooltips
   const tooltipTriggerList = [].slice.call(
     document.querySelectorAll('[data-bs-toggle="tooltip"]')
   );
   tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl);
   });
+
+  // Display current date
   const currentDate = document.getElementById("currentDate");
   currentDate.textContent = formatDate(new Date());
 });
 
+
+// ====================== GROUP SELECTION ======================
 checkboxes.forEach((cb) => {
   cb.addEventListener("change", function () {
     if (this.checked) {
+      // --- Pick rawNames based on selected checkbox ---
       rawNames =
         this.value === "group1"
           ? Group_1
@@ -86,6 +98,7 @@ checkboxes.forEach((cb) => {
           ? Group_2
           : Combined;
 
+      // --- Store Group label (Group 1 / Group 2 / Combined) ---
       Group =
         this.value === "group1"
           ? "Group 1"
@@ -93,37 +106,45 @@ checkboxes.forEach((cb) => {
           ? "Group 2"
           : "Combined";
 
+      // Reset state
       displayNames = [];
       attendanceStatus = {};
       isRP = {};
 
+      // --- Clean and categorize names ---
       displayNames = rawNames
         .filter((n) => {
           if (n.includes("(RP)")) {
+            // If RP → mark as RP (but don’t show in list)
             const cleanName = n.replace(" (RP)", "");
             attendanceStatus[cleanName] = "RP";
+            isRP[cleanName] = true; // ✅ use RP flag for row highlight
             return false;
           } else if (n.includes("(C)")) {
+            // If Coordinator → mark as C and show
             const cleanName = n.replace(" (C)", "");
             attendanceStatus[cleanName] = "C";
             return true;
           }
-          return true;
+          return true; // normal names → show
         })
         .map((n) => {
           if (n.includes("(C)")) {
-            return n.replace("(C)", "");
+            return n.replace("(C)", ""); // remove (C) in display
           }
-          attendanceStatus[n] = "present";
+          attendanceStatus[n] = "present"; // default status
           return n;
         });
 
+      // Render updated list
       renderList();
 
+      // --- Ensure only one group checkbox stays checked ---
       checkboxes.forEach((other) => {
         if (other !== this) other.checked = false;
       });
     } else {
+      // --- If unchecked → reset everything ---
       displayNames = [];
       status = {};
       isRP = {};
@@ -133,20 +154,22 @@ checkboxes.forEach((cb) => {
   });
 });
 
+
+// ====================== RENDER PARTICIPANT LIST ======================
 function renderList() {
-  // Clear previous list
   const listDiv = document.getElementById("list");
-  listDiv.innerHTML = "";
+  listDiv.innerHTML = ""; // Clear previous
 
   displayNames
     .sort((a, b) => a.localeCompare(b))
     .forEach((name) => {
       const div = document.createElement("div");
+      // Add rp-row class if RP
       div.className = "person" + (isRP[name] ? " rp-row" : "");
       div.innerHTML = `
       <span class="name">${name}</span>
       <div class="d-flex gap-2">
-          <input name='alt' type="checkbox"  class="custom-tooltip" data-tooltip="Attending alternative CS" onchange="mark('${name}','other',this)"> 🟨
+          <input name='alt' type="checkbox" class="custom-tooltip" data-tooltip="Attending alternative CS" onchange="mark('${name}','other',this)"> 🟨
           <input name='Absent' type="checkbox" class="custom-tooltip" data-tooltip="Absent" onchange="mark('${name}','absent',this)"> ❌
      </div>
     `;
@@ -154,15 +177,24 @@ function renderList() {
     });
 }
 
+
+// ====================== MARK ATTENDANCE ======================
 function mark(name, state, checkbox) {
+  // --- Ensure only one checkbox can be active at a time ---
   const cbs = document.querySelectorAll(`.person input[onchange*="'${name}'"]`);
   cbs.forEach((cb) => {
-    if (cb !== checkbox) cb.checked = false; // uncheck others
+    if (cb !== checkbox) cb.checked = false;
   });
+
+  // --- Update attendance state ---
   attendanceStatus[name] = checkbox.checked ? state : "present";
+
+  // --- Update color coding ---
   updateNameColors();
 }
 
+
+// ====================== COLOR CODING ======================
 function updateNameColors() {
   document.querySelectorAll(".person").forEach((row) => {
     const altChecked = row.querySelector('input[name="alt"]').checked;
@@ -170,32 +202,36 @@ function updateNameColors() {
     const nameSpan = row.querySelector(".name");
 
     if (nameSpan) {
-      // Reset styles first
+      // Reset default style
       nameSpan.style.color = "";
       nameSpan.style.fontWeight = "bold";
       nameSpan.style.textShadow = "";
 
+      // Apply state styles
       if (altChecked) {
         nameSpan.style.color = "var(--bs-warning)"; // yellow
-        nameSpan.style.fontWeight = "bold";
         nameSpan.style.textShadow = "1px 1px 2px red";
       } else if (absentChecked) {
         nameSpan.style.color = "var(--bs-danger)"; // red
-        nameSpan.style.fontWeight = "bold";
         nameSpan.style.textShadow = "1px 1px 2px darkred";
       }
     }
   });
 }
 
+
+// ====================== REPORT GENERATION ======================
 function generateOutput() {
   const time = document.getElementById("time").value.trim();
+
+  // --- Static report headers ---
   const Mean = "📒 COMMUNICATION SESSION REPORT";
   const Batch = " BCR71";
   const date = formatDate(new Date());
   const GroupName = Group;
   const Time = time;
 
+  // --- Get Coordinators per group ---
   let Coordinators =
     Group === "Group 1"
       ? Group_1.filter((n) => n.includes("(C)"))
@@ -206,6 +242,8 @@ function generateOutput() {
           .map((n) => n.replace(" (C)", ""))
           .join(" & ")
       : null;
+
+  // --- If Combined group → format coordinators from both ---
   if (Coordinators === null) {
     let combined = Combined.filter((n) => n.includes("(C)")).map((n) =>
       n.replace(" (C)", "")
@@ -224,9 +262,10 @@ function generateOutput() {
     });
   }
 
-
   const Trainer = " Afzal Nazar";
   const Duck = "🔷🔷🔷🔷🔷🔷🔷🔷🔷🔷🔷";
+
+  // --- Collect extra details ---
   const tldv = document.getElementById("tldv").value.trim();
   const meetList = document.getElementById("meetlist").value.trim();
   const tldvLink = tldv ? `Tldv: ${tldv}` : "Tldv: Not provided";
@@ -237,12 +276,13 @@ function generateOutput() {
   const reportByText = document.getElementById("over").value.trim();
   let OtherBatch = document.getElementById("Batch").value.trim().split(",");
 
-  // Prepare the details section
-
+  // --- Details block ---
   const Detalis = `${Duck}\n${Mean} \n🎓 Batch :${Batch} ${GroupName} \n📅 Date :${date}\n⏰ Time :${Time} \n👨🏻‍🏫 Trainer :${Trainer}\n👫 Coordinators : ${Coordinators}\n${Duck}\n\n`;
+
+  // --- Session overview ---
   const Report = `♻ Session Overview:\n           ${reportByText}`;
 
-  // Prepare the attendance report
+  // --- Attendance builder helper ---
   let textMaker = (text, icon, status, textIcon, check = attendanceStatus) => {
     let Text;
     if (check === attendanceStatus) {
@@ -271,12 +311,13 @@ function generateOutput() {
     return Text;
   };
 
-  // Count function to get number of attendees in each category
+  // --- Attendance counters ---
   const counter = (state, check = attendanceStatus) => {
     return Object.keys(check).filter((n) => attendanceStatus[n] === state)
       .length;
   };
 
+  // --- Build sections ---
   let count = counter("present");
   let presentees = textMaker("Presentees", "🟩", "present", "✅");
   presentees = count === 0 ? "" : presentees;
@@ -285,7 +326,6 @@ function generateOutput() {
   let alternative = textMaker("Alternative Session", "🟨", "other", "☑️");
   alternative = count === 0 ? "" : alternative;
 
-  count = 0;
   count = OtherBatch.length;
   let OtherBatches = textMaker("Other Batches", "🤩", "", "✨", OtherBatch);
   OtherBatches = OtherBatch[0] === "" ? "" : OtherBatches;
@@ -298,9 +338,10 @@ function generateOutput() {
   let RP = textMaker("Refresh Period", "🔃", "RP", "🔄");
   RP = count === 0 ? "" : RP;
 
+  // --- Links and footer ---
   const link = `\n\n🔗 Link: \n\n      ${tldvLink}\n      ${meetListLink}\n\n ✍ Report By : ${reportBy}`;
 
-  // FINAL OUTPUT
+  // --- FINAL REPORT OUTPUT ---
   const finalText =
     Detalis +
     Report +
@@ -311,13 +352,13 @@ function generateOutput() {
     RP +
     link;
 
-  // Show in view mode
+  // Update both view and edit modes
   document.getElementById("outputView").textContent = finalText;
-
-  // Keep edit mode synced
   document.getElementById("outputEdit").value = finalText;
 }
 
+
+// ====================== UTILITIES ======================
 function formatDate(date) {
   const day = String(date.getDate()).padStart(2, "0");
   const month = date.toLocaleString("en-US", { month: "short" });
@@ -325,6 +366,8 @@ function formatDate(date) {
   return `${day} ${month} ${year}`;
 }
 
+
+// ====================== COPY TO CLIPBOARD ======================
 function copyOutput() {
   const viewMode = document.getElementById("outputView");
   const editMode = document.getElementById("outputEdit");
@@ -336,10 +379,12 @@ function copyOutput() {
       title: "Oops...",
       text: "Please generate the report first!",
     });
-  // Get text from whichever mode is visible
+
+  // Pick content from active mode
   const textToCopy =
     editMode.style.display === "block" ? editMode.value : viewMode.textContent;
 
+  // Copy to clipboard
   navigator.clipboard
     .writeText(textToCopy)
     .then(() => {
@@ -351,6 +396,8 @@ function copyOutput() {
     });
 }
 
+
+// ====================== TOGGLE EDIT MODE ======================
 let editingMode = false;
 
 function toggleEdit() {
@@ -366,10 +413,11 @@ function toggleEdit() {
       title: "Oops...",
       text: "Please generate the report first!",
     });
-  // Set toolbar position
+
+  // Place toolbar below header
   toolbar.style.top = `${header.offsetHeight}px`;
 
-  // Remove leftover animation classes
+  // Remove leftover animations
   outputView.classList.remove("slide-in", "slide-out");
   outputEdit.classList.remove("slide-in", "slide-out");
 
@@ -388,17 +436,17 @@ function toggleEdit() {
       outputEdit.style.display = "block";
       outputEdit.classList.add("edit-fullscreen", "slide-in");
 
-      // Keep content synced
+      // Keep text synced
       outputEdit.value = outputView.textContent;
 
       editBtn.textContent = "💾 Save";
       outputEdit.focus();
     }, 400);
   } else {
-    // --- SAVE AND EXIT EDIT MODE ---
+    // --- EXIT EDIT MODE ---
     editingMode = false;
 
-    // Save edited content
+    // Save edits
     outputView.textContent = outputEdit.value;
 
     // Animate editor out
