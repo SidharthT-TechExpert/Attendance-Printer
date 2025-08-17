@@ -151,7 +151,7 @@ function renderList() {
       div.style.display = "inline-block";
       div.innerHTML = `
       <div class="name col-md-6" style='display:inline-block;'>${name}</div>
-      <div class="col-md-4" style='display:inline-block;'>
+      <div class="col-md-5" style='display:inline-block;' >
           <input style='display:inline-block;' name='alt' type="checkbox" class="custom-tooltip" data-tooltip="Attending alternative CS" onchange="mark('${name}','other',this)"> 🟨
           <input style='display:inline-block;' name='Absent' type="checkbox" class="custom-tooltip" data-tooltip="Absent" onchange="mark('${name}','absent',this)"> ❌
      </div>
@@ -250,7 +250,11 @@ function generateOutput() {
   const meetListLink = meetList
     ? `Meet list: ${meetList}`
     : "Meet list: Not provided";
-  const reportBy = document.getElementById("reportBy").value.trim();
+  const reportBy = document.getElementById("reportBy").value.trim()
+              .trimStart()
+              .split(" ")
+              .map((word) => `${word.charAt(0).toUpperCase() + word.slice(1)}`)
+              .join(" ")
   const reportByText = document.getElementById("over").value.trim();
   let OtherBatch = document.getElementById("Batch").value.trim().split(",");
 
