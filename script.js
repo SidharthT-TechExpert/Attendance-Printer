@@ -37,7 +37,7 @@ const Group_2 = [
   "Juvek Swamiji (RP)",
   "Solaman KJ",
   "Swagath TV",
-  "Tijo Thomas",
+  "Tijo Thomas (RP)",
   "Eid Bilal",
   "Minto Thomas",
   "Muzammil Muhammed",
@@ -223,6 +223,8 @@ function generateOutput() {
       }
     });
   }
+
+
   const Trainer = " Afzal Nazar";
   const Duck = "🔷🔷🔷🔷🔷🔷🔷🔷🔷🔷🔷";
   const tldv = document.getElementById("tldv").value.trim();
@@ -240,27 +242,36 @@ function generateOutput() {
   const Detalis = `${Duck}\n${Mean} \n🎓 Batch :${Batch} ${GroupName} \n📅 Date :${date}\n⏰ Time :${Time} \n👨🏻‍🏫 Trainer :${Trainer}\n👫 Coordinators : ${Coordinators}\n${Duck}\n\n`;
   const Report = `♻ Session Overview:\n           ${reportByText}`;
 
+  // Prepare the attendance report
   let textMaker = (text, icon, status, textIcon, check = attendanceStatus) => {
-    return (
-      `\n\n${icon} ${text} (${counter(status, check)}) :\n\n` +
-      Object.keys(check)
-        .filter((n) => attendanceStatus[n] === status)
-        .sort((a, b) => a.localeCompare(b))
-        .map((n) => `${textIcon} ${n} `)
-        .join("\n")
-    );
-  };
-  let textMaker2 = (text, icon, textIcon, check = OtherBatch) => {
-    return (
-      `\n\n${icon} ${text} (${check.length})) :\n\n` +
-      check
-        .sort((a, b) => a.trim().localeCompare(b.trim()))
-        .map((n) => `${textIcon} ${n.trimStart().charAt(0).toUpperCase()+ n.trimStart().slice(1)} `)
-        .join("\n")
-    );
+    let Text;
+    if (check === attendanceStatus) {
+      Text =
+        `\n\n${icon} ${text} (${counter(status, check)}) :\n\n` +
+        Object.keys(check)
+          .filter((n) => attendanceStatus[n] === status)
+          .sort((a, b) => a.localeCompare(b))
+          .map((n) => `${textIcon} ${n} `)
+          .join("\n");
+    } else if (check === OtherBatch) {
+      Text =
+        `\n\n${icon} ${text} (${check.length}) :\n\n` +
+        check
+          .sort((a, b) => a.trim().localeCompare(b.trim()))
+          .map((name) =>
+            name
+              .trimStart()
+              .split(" ")
+              .map((word) => `${word.charAt(0).toUpperCase() + word.slice(1)}`)
+              .join(" ")
+          )
+          .map((name) => `${textIcon} ${name} `)
+          .join("\n");
+    }
+    return Text;
   };
 
-  // Prepare the attendance report
+  // Count function to get number of attendees in each category
   const counter = (state, check = attendanceStatus) => {
     return Object.keys(check).filter((n) => attendanceStatus[n] === state)
       .length;
@@ -276,7 +287,7 @@ function generateOutput() {
 
   count = 0;
   count = OtherBatch.length;
-  let OtherBatches = textMaker2("Other Batches", "🤩", "✨");
+  let OtherBatches = textMaker("Other Batches", "🤩", "", "✨", OtherBatch);
   OtherBatches = OtherBatch[0] === "" ? "" : OtherBatches;
 
   count = counter("absent");
