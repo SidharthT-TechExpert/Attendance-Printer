@@ -91,9 +91,10 @@ checkboxes.forEach((cb) => {
 
       // Reset state
       displayNames = [];
-      attendanceStatus = {};
+      attendanceStatus = {}; // <-- correct variable
       isRP = {};
-
+      rawNames = [];
+      renderList();
       // --- Clean and categorize names ---
       displayNames = rawNames
         .filter((n) => {
@@ -250,11 +251,13 @@ function generateOutput() {
   const meetListLink = meetList
     ? `Meet list: ${meetList}`
     : "Meet list: Not provided";
-  const reportBy = document.getElementById("reportBy").value.trim()
-              .trimStart()
-              .split(" ")
-              .map((word) => `${word.charAt(0).toUpperCase() + word.slice(1)}`)
-              .join(" ")
+  const reportBy = document
+    .getElementById("reportBy")
+    .value.trim()
+    .trimStart()
+    .split(" ")
+    .map((word) => `${word.charAt(0).toUpperCase() + word.slice(1)}`)
+    .join(" ");
   const reportByText = document.getElementById("over").value.trim();
   let OtherBatch = document.getElementById("Batch").value.trim().split(",");
 
@@ -474,22 +477,25 @@ document.querySelectorAll(".custom-dropdown").forEach((drop) => {
       drop.classList.remove("active");
     });
   });
-}); 
+});
 
 // Close if clicked outside
 window.addEventListener("click", (e) => {
   document.querySelectorAll(".custom-dropdown").forEach((drop) => {
     if (!drop.contains(e.target)) drop.classList.remove("active");
   });
-}); 
+});
 
-// Function to get the selected time from the custom dropdown function 
-function getSelectedTime() { 
+// Function to get the selected time from the custom dropdown function
+function getSelectedTime() {
   const btn = document.querySelector(".custom-dropdown .dropdown-btn");
-   return btn.textContent.replace('⌄','').replace('⏰','').replace('⏰ 🕒',''); // returns the selected label (like "⏰ 11:30 AM - 12:30 PM")
- }
- 
- // When page loads, set default value 
+  return btn.textContent
+    .replace("⌄", "")
+    .replace("⏰", "")
+    .replace("⏰ 🕒", ""); // returns the selected label (like "⏰ 11:30 AM - 12:30 PM")
+}
+
+// When page loads, set default value
 window.addEventListener("DOMContentLoaded", () => {
   const defaultTime = "11:30 AM - 12:30 PM"; // <-- your default value
 
