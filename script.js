@@ -27,7 +27,8 @@ const Group_1 = [
 const Group_2 = [
   "Ahammed Junaid",
   "Ajnas Muhammed (C)",
-  "Akhil",
+  "Akhil" ,
+  "Arun M",
   "Arshad Chappangan",
   "Bijo P A",
   "Gowry N",
